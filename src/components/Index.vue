@@ -38,7 +38,7 @@ export default {
   data() {
     return {
       pristine: true,
-      valid: true,
+      valid: false,
       isCompositionStart: false,
     }
   },
