@@ -1,16 +1,24 @@
 <template>
-  <input :type="myConfig.inputType"
+  <textarea v-if="myConfig.inputType==='textarea'" ref="inputEl"
+            :id="id"
+            :type="myConfig.inputType"
+            :value="value"
+            :placeholder="myConfig.placeholder||myConfig.name"
+            :autocomplete="myConfig.autocomplete"
+            :autofocus="myConfig.autofocus"
+            :readonly="myConfig.readonly"
+            :disabled="myConfig.disabled"
+            v-on="listeners"></textarea>
+  <input v-else ref="inputEl"
          :id="id"
+         :type="myConfig.inputType"
          :value="value"
-         :style="styles"
          :placeholder="myConfig.placeholder||myConfig.name"
-         ref="inputEl"
-         @focus="$emit('focus', $event)"
-         @input="input($event.target.value)"
-         @keyup.enter="$emit('keyup.enter',$event.target.value)"
-         @blur="blur($event.target.value)"
-         @compositionstart="isCompositionStart=true"
-         @compositionend="isCompositionStart=false;input($event.target.value)">
+         :autocomplete="myConfig.autocomplete"
+         :autofocus="myConfig.autofocus"
+         :readonly="myConfig.readonly"
+         :disabled="myConfig.disabled"
+         v-on="listeners">
 </template>
 
 <script>
@@ -19,8 +27,11 @@ const defaultConf = {
   placeholder: '',
   validator: () => true,
   formatter: val => val,
-  required: true,
   needTrim: true,
+  readonly: false,
+  autocomplete: 'off',
+  autofocus: false,
+  disabled: false,
 }
 
 export default {
@@ -33,7 +44,7 @@ export default {
       },
       type: Object,
     },
-    styles: Object,
+    toInit: Boolean,
   },
   data() {
     return {
@@ -44,7 +55,12 @@ export default {
   },
   computed: {
     myConfig() {
-      return { ...defaultConf, ...this.config }
+      return {
+        ...defaultConf,
+        ...this.config,
+        validator: this.isFn(this.config.validator) ? this.config.validator : defaultConf.validator,
+        formatter: this.isFn(this.config.formatter) ? this.config.formatter : val => val,
+      }
     },
     listeners() {
       return {
@@ -64,30 +80,36 @@ export default {
     value(val) {
       if (val !== this.myValue) {
         this.formChange(val)
-        if (this.valid) {
-          this.$emit('check', { pristine: this.pristine, valid: this.valid })
-        }
+      }
+    },
+    toInit(val) {
+      if (val) {
+        this.input('', true)
       }
     },
   },
   methods: {
-    formChange(value, isBlur = false) {
+    isFn(val) {
+      return typeof val === 'function'
+    },
+    formChange(value, isInit = false) {
+      if (isInit) {
+        this.pristine = true
+        this.valid = false
+        this.$emit('check', { pristine: this.pristine, valid: this.valid })
+        return
+      }
       if (value) this.pristine = false
       if (!this.pristine) {
-        const valid = (value && !this.myConfig.validator)
-          || (value && this.myConfig.validator && this.myConfig.validator(value))
-          || (this.myConfig.required === false && !value)
-        if (!isBlur && valid !== this.valid) {
-          this.valid = valid
-          this.$emit('check', { pristine: this.pristine, valid: this.valid })
-        }
+        this.valid = this.myConfig.validator(value)
+        this.$emit('check', { pristine: this.pristine, valid: this.valid })
       }
     },
-    input(val, isBlur = false) {
+    input(val, isInit = false) {
       if (this.isCompositionStart) return
       const value = this.myConfig.formatter(val)
 
-      this.formChange(value, isBlur)
+      this.formChange(value, isInit)
 
       this.myValue = value
       if (this.$refs.inputEl) this.$refs.inputEl.value = this.myValue
@@ -96,8 +118,7 @@ export default {
     },
     blur(val) {
       const value = this.myConfig.needTrim ? val.trim() : val
-      this.input(value, true)
-      this.$emit('check', { pristine: this.pristine, valid: this.valid })
+      this.input(value)
     },
     enter(val) {
       this.blur(val)

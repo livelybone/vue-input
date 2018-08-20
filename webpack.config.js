@@ -1,14 +1,5 @@
-const VueLoaderPlugin = require('vue-loader/lib/plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
-const path = require('path');
-const fs = require('fs');
-
-function getEntries() {
-  const reg = /\.vue$/;
-  return fs.readdirSync(path.resolve(__dirname, './src/component'))
-    .filter(filename => reg.test(filename) && !fs.statSync(path.resolve(__dirname, './src/component', filename)).isDirectory())
-    .map(filename => ({ [filename.replace(reg, '')]: path.resolve(__dirname, './src/component', filename) }));
-}
+const VueLoaderPlugin = require('vue-loader/lib/plugin')
+const path = require('path')
 
 const config = {
   mode: 'production',
@@ -40,15 +31,7 @@ const config = {
   },
   plugins: [
     new VueLoaderPlugin(),
-    // copy custom static assets
-    new CopyWebpackPlugin([
-      {
-        from: path.resolve(__dirname, 'src/css'),
-        to: 'css',
-        ignore: ['.*'],
-      },
-    ]),
   ],
-};
+}
 
-module.exports = config;
+module.exports = config
