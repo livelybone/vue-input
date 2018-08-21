@@ -26,8 +26,12 @@ const defaultConf = {
   inputType: 'text',
   placeholder: '',
   validator: () => true,
-  formatter: val => val,
-  needTrim: true,
+  // ['pre','suf'], timing of validator
+  validateType: 'pre',
+  // Formatting when inputting
+  preFormatter: val => val,
+  // Formatting at the end of inputting
+  sufFormatter: val => val,
   readonly: false,
   autocomplete: 'off',
   autofocus: false,
@@ -49,7 +53,7 @@ export default {
   data() {
     return {
       pristine: true,
-      valid: false,
+      valid: true,
       isCompositionStart: false,
     }
   },
@@ -59,7 +63,8 @@ export default {
         ...defaultConf,
         ...this.config,
         validator: this.isFn(this.config.validator) ? this.config.validator : defaultConf.validator,
-        formatter: this.isFn(this.config.formatter) ? this.config.formatter : val => val,
+        preFormatter: this.isFn(this.config.preFormatter) ? this.config.preFormatter : val => val,
+        sufFormatter: this.isFn(this.config.sufFormatter) ? this.config.sufFormatter : val => val,
       }
     },
     listeners() {
@@ -68,9 +73,12 @@ export default {
         'input': ev => this.input(ev.target.value),
         'compositionstart': this.compStart,
         'compositionend': this.compEnd,
-        'blur': this.blur,
+        'blur': (ev) => {
+          this.blur(ev.target.value)
+          if (this.$listeners.blur) this.$listeners.keyup(ev)
+        },
         'keyup': (ev) => {
-          if (ev.code === 'Enter') this.enter(ev)
+          if (ev.code === 'Enter') this.enter(ev.target.value)
           if (this.$listeners.keyup) this.$listeners.keyup(ev)
         },
       }
@@ -84,7 +92,7 @@ export default {
     },
     toInit(val) {
       if (val) {
-        this.input('', true)
+        this.input('', { isInit: true })
       }
     },
   },
@@ -92,24 +100,27 @@ export default {
     isFn(val) {
       return typeof val === 'function'
     },
-    formChange(value, isInit = false) {
+    formChange(value, { isInit = false, isEnd = false }) {
       if (isInit) {
         this.pristine = true
         this.valid = false
         this.$emit('check', { pristine: this.pristine, valid: this.valid })
-        return
-      }
-      if (value) this.pristine = false
-      if (!this.pristine) {
-        this.valid = this.myConfig.validator(value)
-        this.$emit('check', { pristine: this.pristine, valid: this.valid })
+      } else {
+        if (value) this.pristine = false
+        if (!this.pristine) {
+          if (this.myConfig.validateType === 'pre'
+            || (this.myConfig.validateType === 'suf' && isEnd)) {
+            this.valid = this.myConfig.validator(value)
+            this.$emit('check', { pristine: this.pristine, valid: this.valid })
+          }
+        }
       }
     },
     input(val, isInit = false) {
       if (this.isCompositionStart) return
-      const value = this.myConfig.formatter(val)
+      const value = this.myConfig.preFormatter(val)
 
-      this.formChange(value, isInit)
+      this.formChange(value, { isInit })
 
       this.myValue = value
       if (this.$refs.inputEl) this.$refs.inputEl.value = this.myValue
@@ -117,16 +128,18 @@ export default {
       this.$emit('input', value)
     },
     blur(val) {
-      const value = this.myConfig.needTrim ? val.trim() : val
-      this.input(value)
+      const value = this.myConfig.sufFormatter(val)
+      this.input(value, { isEnd: true })
     },
     enter(val) {
       this.blur(val)
     },
-    compStart() {
+    compStart(ev) {
+      if (this.$listeners.compositionstart) this.$listeners.compositionstart(ev)
       this.isCompositionStart = true
     },
     compEnd(ev) {
+      if (this.$listeners.compositionend) this.$listeners.compositionend(ev)
       this.isCompositionStart = false
       this.input(ev.target.value)
     },
