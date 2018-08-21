@@ -8,6 +8,7 @@
             :autofocus="myConfig.autofocus"
             :readonly="myConfig.readonly"
             :disabled="myConfig.disabled"
+            :maxlength="myConfig.maxlength"
             v-on="listeners"></textarea>
   <input v-else ref="inputEl"
          :id="id"
@@ -18,6 +19,7 @@
          :autofocus="myConfig.autofocus"
          :readonly="myConfig.readonly"
          :disabled="myConfig.disabled"
+         :maxlength="myConfig.maxlength"
          v-on="listeners">
 </template>
 
@@ -32,6 +34,7 @@ const defaultConf = {
   preFormatter: val => val,
   // Formatting at the end of inputting
   sufFormatter: val => val,
+  maxlength: null,
   readonly: false,
   autocomplete: 'off',
   autofocus: false,
@@ -62,6 +65,7 @@ export default {
       return {
         ...defaultConf,
         ...this.config,
+        inputType: this.typeConvert(this.config.inputType),
         validator: this.isFn(this.config.validator) ? this.config.validator : defaultConf.validator,
         preFormatter: this.isFn(this.config.preFormatter) ? this.config.preFormatter : val => val,
         sufFormatter: this.isFn(this.config.sufFormatter) ? this.config.sufFormatter : val => val,
@@ -97,6 +101,12 @@ export default {
     },
   },
   methods: {
+    typeConvert(type) {
+      if (['password', 'text', 'textarea'].includes(type)) {
+        return type
+      }
+      return 'text'
+    },
     isFn(val) {
       return typeof val === 'function'
     },

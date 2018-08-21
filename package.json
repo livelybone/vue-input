@@ -1,6 +1,6 @@
 {
   "name": "@livelybone/vue-input",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "A vue input component, a wrapper of input validator, formatter. textarea available",
   "main": "./lib/index.js",
   "scripts": {
