@@ -91,7 +91,7 @@ export default {
   watch: {
     value(val) {
       if (val !== this.myValue) {
-        this.formChange(val)
+        this.formChange(val, {})
       }
     },
     toInit(val) {
