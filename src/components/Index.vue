@@ -1,8 +1,8 @@
 <template>
-  <textarea v-if="myConfig.inputType==='textarea'"
+  <textarea v-if="myConfig.inputType==='textarea'" ref="inputEl"
             :id="id"
             :type="myConfig.inputType"
-            :value="myValue"
+            :value="value"
             :placeholder="myConfig.placeholder||myConfig.name"
             :autocomplete="myConfig.autocomplete"
             :autofocus="myConfig.autofocus"
@@ -10,10 +10,10 @@
             :disabled="myConfig.disabled"
             :maxlength="myConfig.maxlength"
             v-on="listeners"></textarea>
-  <input v-else
+  <input v-else ref="inputEl"
          :id="id"
          :type="myConfig.inputType"
-         :value="myValue"
+         :value="value"
          :placeholder="myConfig.placeholder||myConfig.name"
          :autocomplete="myConfig.autocomplete"
          :autofocus="myConfig.autofocus"
@@ -74,7 +74,7 @@ export default {
     listeners() {
       return {
         ...this.$listeners,
-        'input': ev => this.input(ev.target.value),
+        'input': ev => this.input(ev.target.value, {}),
         'compositionstart': this.compStart,
         'compositionend': this.compEnd,
         'blur': (ev) => {
@@ -127,17 +127,16 @@ export default {
         }
       }
     },
-    input(val, isInit = false) {
+    input(val, { isInit = false, isEnd = false }) {
       if (this.isCompositionStart) return
       const value = this.myConfig.preFormatter(val)
 
-      this.formChange(value, { isInit })
+      this.formChange(value, { isInit, isEnd })
 
       if (this.myValue !== value) {
         this.myValue = value
-      } else {
-        this.$forceUpdate()
       }
+      if (this.$refs.inputEl) this.$refs.inputEl.value = this.myValue
 
       this.$emit('input', value)
     },
