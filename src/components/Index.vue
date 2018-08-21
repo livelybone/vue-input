@@ -1,8 +1,8 @@
 <template>
-  <textarea v-if="myConfig.inputType==='textarea'" ref="inputEl"
+  <textarea v-if="myConfig.inputType==='textarea'"
             :id="id"
             :type="myConfig.inputType"
-            :value="value"
+            :value="myValue"
             :placeholder="myConfig.placeholder||myConfig.name"
             :autocomplete="myConfig.autocomplete"
             :autofocus="myConfig.autofocus"
@@ -10,10 +10,10 @@
             :disabled="myConfig.disabled"
             :maxlength="myConfig.maxlength"
             v-on="listeners"></textarea>
-  <input v-else ref="inputEl"
+  <input v-else
          :id="id"
          :type="myConfig.inputType"
-         :value="value"
+         :value="myValue"
          :placeholder="myConfig.placeholder||myConfig.name"
          :autocomplete="myConfig.autocomplete"
          :autofocus="myConfig.autofocus"
@@ -91,6 +91,7 @@ export default {
   watch: {
     value(val) {
       if (val !== this.myValue) {
+        this.myValue = val
         this.formChange(val, {})
       }
     },
@@ -132,8 +133,11 @@ export default {
 
       this.formChange(value, { isInit })
 
-      this.myValue = value
-      if (this.$refs.inputEl) this.$refs.inputEl.value = this.myValue
+      if (this.myValue !== value) {
+        this.myValue = value
+      } else {
+        this.$forceUpdate()
+      }
 
       this.$emit('input', value)
     },
