@@ -103,7 +103,7 @@ export default {
   },
   methods: {
     typeConvert(type) {
-      if (['password', 'text', 'textarea'].includes(type)) {
+      if (['password', 'text', 'textarea'].some(i => i === type)) {
         return type
       }
       return 'text'
