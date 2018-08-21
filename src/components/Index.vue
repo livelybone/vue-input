@@ -79,7 +79,7 @@ export default {
         'compositionend': this.compEnd,
         'blur': (ev) => {
           this.blur(ev.target.value)
-          if (this.$listeners.blur) this.$listeners.keyup(ev)
+          if (this.$listeners.blur) this.$listeners.blur(ev)
         },
         'keyup': (ev) => {
           if (ev.code === 'Enter') this.enter(ev.target.value)
