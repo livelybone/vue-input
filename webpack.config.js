@@ -7,7 +7,7 @@ const config = {
   output: {
     path: path.resolve(__dirname, './lib'),
     filename: './[name].js',
-    library: 'VueComponent',
+    library: 'VueInput',
     libraryTarget: 'umd',
     globalObject: 'this',
   },
