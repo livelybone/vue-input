@@ -81,10 +81,6 @@ export default {
           this.blur(ev.target.value)
           if (this.$listeners.blur) this.$listeners.blur(ev)
         },
-        'keyup': (ev) => {
-          if (ev.code === 'Enter') this.enter(ev.target.value)
-          if (this.$listeners.keyup) this.$listeners.keyup(ev)
-        },
       }
     },
   },
@@ -143,9 +139,6 @@ export default {
     blur(val) {
       const value = this.myConfig.sufFormatter(val)
       this.input(value, { isEnd: true })
-    },
-    enter(val) {
-      this.blur(val)
     },
     compStart(ev) {
       if (this.$listeners.compositionstart) this.$listeners.compositionstart(ev)
