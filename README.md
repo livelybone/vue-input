@@ -30,7 +30,7 @@ new Vue({
 | ----------------- | ----------------------------------------- | -------------------- | ------------ |
 | `id`              | `[String, Number]`                        | none                 |  |
 | `value`           | `[String, Number]`                        | none                 |  |
-| `config`          | `String`                                  | ```{
+| `config`          | `String`                                  | <td>{
                                                                      inputType: 'text',
                                                                      placeholder: '',
                                                                      validator: () => true,
@@ -45,7 +45,25 @@ new Vue({
                                                                      autocomplete: 'off',
                                                                      autofocus: false,
                                                                      disabled: false,
-                                                                   }```                 |  |
+                                                                   }`                 |  |
+
+<table width="300" class="table table-bordered table-striped table-condensed">
+   <tbody><tr>
+      <th width="25%">时间</th>
+      <th width="25%">地点</th>
+      <th width="50%">人物</th>
+   </tr>
+   <tr>
+      <td>3月5日</td>
+      <td>北京</td>
+      <td>姚明</td>
+   </tr>
+   <tr>
+      <td>3月7日</td>
+      <td>上海</td>
+      <td>韩寒</td>
+   </tr>
+</tbody></table>
 
 ## Events
 | Name                  | EmittedData           | Description                                       |
