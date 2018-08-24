@@ -51,7 +51,6 @@ export default {
       },
       type: Object,
     },
-    toInit: Boolean,
   },
   data() {
     return {
@@ -91,13 +90,11 @@ export default {
         this.formChange(val, {})
       }
     },
-    toInit(val) {
-      if (val) {
-        this.input('', { isInit: true })
-      }
-    },
   },
   methods: {
+    init(val) {
+      this.input(val.toString(), { isInit: true, isEnd: true })
+    },
     typeConvert(type) {
       if (['password', 'text', 'textarea'].some(i => i === type)) {
         return type
@@ -125,7 +122,7 @@ export default {
     },
     input(val, { isInit = false, isEnd = false }) {
       if (this.isCompositionStart) return
-      const value = this.myConfig.preFormatter(val)
+      const value = isEnd ? this.myConfig.sufFormatter(val) : this.myConfig.preFormatter(val)
 
       this.formChange(value, { isInit, isEnd })
 
