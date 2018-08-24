@@ -30,7 +30,7 @@ new Vue({
 | ----------------- | ----------------------------------------- | -------------------- | ------------ |
 | `id`              | `[String, Number]`                        | none                 |  |
 | `value`           | `[String, Number]`                        | none                 |  |
-| `config`          | `String`                                  | <td>{
+| `config`          | `String`                                  | `{
                                                                      inputType: 'text',
                                                                      placeholder: '',
                                                                      validator: () => true,
@@ -61,7 +61,22 @@ new Vue({
    <tr>
       <td>3月7日</td>
       <td>上海</td>
-      <td>韩寒</td>
+      <td>{
+                                                                               inputType: 'text',
+                                                                               placeholder: '',
+                                                                               validator: () => true,
+                                                                               // ['pre','suf'], timing of validator
+                                                                               validateType: 'pre',
+                                                                               // Formatting when inputting
+                                                                               preFormatter: val => val,
+                                                                               // Formatting at the end of inputting
+                                                                               sufFormatter: val => val,
+                                                                               maxlength: null,
+                                                                               readonly: false,
+                                                                               autocomplete: 'off',
+                                                                               autofocus: false,
+                                                                               disabled: false,
+                                                                             }</td>
    </tr>
 </tbody></table>
 
