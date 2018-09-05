@@ -27,6 +27,10 @@ new Vue({
 })
 ```
 
+## Init
+You can init a instance by call its `init` method, then the `valid` and `pristine` will be reset, 
+see: https://github.com/livelybone/vue-input/blob/master/src/components/Index.vue#L95-L97
+
 ## Props
 | Name              | Type                                      | DefaultValue         | Description  |
 | ----------------- | ----------------------------------------- | -------------------- | ------------ |
