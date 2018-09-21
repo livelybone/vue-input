@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>vue-input</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+  <script src="../lib/umd/index.js"></script>
+</head>
+<body>
+<div id="module"></div>
+
+<script>
+new Vue({
+  el: '#module',
+  template: '<vue-input v-model="value"></vue-input>',
+  data: function () {
+    return {
+      value: '',
+    }
+  },
+  methods: {},
+  components: {'vue-input': VueInput}
+})
+</script>
+</body>
+</html>

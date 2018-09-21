@@ -144,7 +144,9 @@ export default {
     compEnd(ev) {
       if (this.$listeners.compositionend) this.$listeners.compositionend(ev)
       this.isCompositionStart = false
-      this.input(ev.target.value, {})
+      this.$nextTick(() => {
+        this.input(ev.target.value, {})
+      })
     },
   },
 }

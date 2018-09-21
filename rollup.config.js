@@ -23,7 +23,7 @@ const conf = entry => Object.assign({}, baseConf, {
   output: entry.formats.map(format => ({
     file: `./lib/${format}/${entry.name}.js`,
     format,
-    name: entry.name === 'index' ? '{{ModuleName}}' : `${entry.name}{{ModuleName}}`,
+    name: 'VueInput',
   })),
   external: [],
   plugins: Object.assign(
@@ -35,5 +35,5 @@ const conf = entry => Object.assign({}, baseConf, {
 
 export default [
   { name: 'index', filename: './src/components/Index.vue', formats: ['es'], needUglify: false },
-  ...getEntries(),
+  { name: 'index', filename: './src/components/Index.vue', formats: ['umd'] },
 ].map(conf)
