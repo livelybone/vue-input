@@ -7,7 +7,7 @@ Deal bug of chinese input
 https://github.com/livelybone/vue-input.git
 
 ## Demo
-https://github.com/livelybone/vue-input#readme
+https://livelybone.github.io/vue/vue-input/
 
 ## Installation
 ```bash

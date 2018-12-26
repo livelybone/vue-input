@@ -1,5 +1,6 @@
 <template>
-  <textarea v-if="myConfig.inputType==='textarea'" ref="inputEl"
+  <textarea v-if="myConfig.inputType==='textarea'"
+            ref="inputEl"
             :id="id"
             :type="myConfig.inputType"
             :value="value"
@@ -10,7 +11,8 @@
             :disabled="myConfig.disabled"
             :maxlength="myConfig.maxlength"
             v-on="listeners"></textarea>
-  <input v-else ref="inputEl"
+  <input v-else
+         ref="inputEl"
          :id="id"
          :type="myConfig.inputType"
          :value="value"
