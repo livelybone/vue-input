@@ -1,14 +1,15 @@
 {
   "name": "@livelybone/vue-input",
-  "version": "3.2.0",
-  "description": "A vue input component, a wrapper of input validator, formatter. textarea available",
+  "version": "3.3.0",
+  "description": "A vue input component, a wrapper of input validator, formatter. textarea available. Fixed bug of chinese input, Fixed bug of auto-fill in chrome and firefox",
   "main": "./lib/umd/index.js",
   "module": "./lib/es/index.js",
   "unpkg": "./lib/umd/index.js",
   "scripts": {
     "build": "rimraf ./lib && rollup -c",
     "eslint": "eslint ./src/index.vue",
-    "test": "cross-env BABEL_ENV=test karma start --single-run"
+    "test": "cross-env BABEL_ENV=test karma start --single-run",
+    "commit": "npx git-cz"
   },
   "repository": {
     "type": "git",
@@ -37,7 +38,9 @@
     "babel-preset-env": "^1.7.0",
     "babel-preset-stage-2": "^6.24.1",
     "chai": "^4.1.2",
+    "commitizen": "^3.0.7",
     "cross-env": "^5.2.0",
+    "cz-conventional-changelog": "^2.1.0",
     "eslint": "^4.19.1",
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-plugin-import": "^2.12.0",
@@ -63,5 +66,10 @@
     "vue-template-compiler": "^2.5.16",
     "webpack": "^4.12.0",
     "webpack-command": "^0.2.1"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }

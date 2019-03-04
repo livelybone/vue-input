@@ -2,7 +2,7 @@
   <textarea v-if="myConfig.inputType==='textarea'"
             ref="inputEl"
             :id="id"
-            :type="myConfig.inputType"
+            :type="inputType"
             :value="value"
             :placeholder="myConfig.placeholder||myConfig.name"
             :autocomplete="myConfig.autocomplete"
@@ -14,7 +14,7 @@
   <input v-else
          ref="inputEl"
          :id="id"
-         :type="myConfig.inputType"
+         :type="inputType"
          :value="value"
          :placeholder="myConfig.placeholder||myConfig.name"
          :autocomplete="myConfig.autocomplete"
@@ -38,10 +38,16 @@ const defaultConf = {
   sufFormatter: val => val,
   maxlength: null,
   readonly: false,
+  // Fixed unexpected action of auto-fill in chrome and firefox
+  // by setting `autocomplete` to 'off' to disabled auto-fill
   autocomplete: 'off',
   autofocus: false,
   disabled: false,
 }
+
+const fnC = (fn, defaultFn = val => val) => (fn instanceof Function ? fn : defaultFn)
+
+const { InputEvent } = window
 
 export default {
   props: {
@@ -58,24 +64,49 @@ export default {
     return {
       pristine: true,
       valid: true,
+      myValue: '',
       isCompositionStart: false,
     }
   },
   computed: {
     myConfig() {
+      const preFormatter = fnC(this.config.preFormatter)
+      const sufFormatter = fnC(this.config.sufFormatter)
+      const validator = fnC(this.config.validator)
       return {
         ...defaultConf,
         ...this.config,
-        inputType: this.typeConvert(this.config.inputType),
-        validator: this.isFn(this.config.validator) ? this.config.validator : defaultConf.validator,
-        preFormatter: this.isFn(this.config.preFormatter) ? this.config.preFormatter : val => val,
-        sufFormatter: this.isFn(this.config.sufFormatter) ? this.config.sufFormatter : val => val,
+        preFormatter,
+        sufFormatter,
+        validator,
       }
+    },
+    inputType() {
+      const { myConfig: { inputType: type, autocomplete }, pristine, valid, myValue } = this
+      if (type === 'textarea') {
+        return type
+      }
+      if (type === 'password' &&
+        ((autocomplete === 'off' && (!pristine || !valid && myValue)) ||
+          autocomplete === 'on')) {
+        return 'password'
+      }
+      return 'text'
     },
     listeners() {
       return {
         ...this.$listeners,
-        'input': ev => this.input(ev.target.value, {}),
+        'input': (ev) => {
+          const { inputType, autocomplete } = this.myConfig
+          if (!InputEvent ||
+            ev instanceof InputEvent ||
+            (inputType === 'password' && autocomplete === 'on')) {
+            this.input(ev.target.value)
+          } else {
+            this.input(this.myValue)
+          }
+        },
+        'paste': ev => this.input(ev.target.value),
         'compositionstart': this.compStart,
         'compositionend': this.compEnd,
         'blur': (ev) => {
@@ -89,7 +120,7 @@ export default {
     value(val) {
       if (val !== this.myValue) {
         this.myValue = val
-        this.formChange(val, {})
+        this.formChange(val)
       }
     },
   },
@@ -97,34 +128,27 @@ export default {
     init(val) {
       this.input(val.toString(), { isInit: true, isEnd: true })
     },
-    typeConvert(type) {
-      if (['password', 'text', 'textarea'].some(i => i === type)) {
-        return type
-      }
-      return 'text'
-    },
-    isFn(val) {
-      return typeof val === 'function'
-    },
-    formChange(value, { isInit = false, isEnd = false }) {
+    formChange(value, { isInit = false, isEnd = false } = {}) {
       if (isInit) {
         this.pristine = true
-        this.valid = false
+        this.valid = true
         this.$emit('check', { pristine: this.pristine, valid: this.valid })
       } else {
         if (value) this.pristine = false
+        const { validateType, validator } = this.myConfig
         if (!this.pristine) {
-          if (this.myConfig.validateType === 'pre'
-            || (this.myConfig.validateType === 'suf' && isEnd)) {
-            this.valid = this.myConfig.validator(value)
+          if (validateType === 'pre' ||
+            (validateType === 'suf' && isEnd)) {
+            this.valid = validator(value)
             this.$emit('check', { pristine: this.pristine, valid: this.valid })
           }
         }
       }
     },
-    input(val, { isInit = false, isEnd = false }) {
+    input(val, { isInit = false, isEnd = false } = {}) {
       if (this.isCompositionStart) return
-      const value = isEnd ? this.myConfig.sufFormatter(val) : this.myConfig.preFormatter(val)
+      const { sufFormatter, preFormatter } = this.myConfig
+      const value = isEnd ? sufFormatter(val) : preFormatter(val)
 
       this.formChange(value, { isInit, isEnd })
 
@@ -147,7 +171,7 @@ export default {
       if (this.$listeners.compositionend) this.$listeners.compositionend(ev)
       this.isCompositionStart = false
       this.$nextTick(() => {
-        this.input(ev.target.value, {})
+        this.input(ev.target.value)
       })
     },
   },
