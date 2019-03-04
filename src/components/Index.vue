@@ -97,10 +97,9 @@ export default {
       return {
         ...this.$listeners,
         'input': (ev) => {
-          const { inputType, autocomplete } = this.myConfig
           if (!InputEvent ||
             ev instanceof InputEvent ||
-            (inputType === 'password' && autocomplete === 'on')) {
+            this.myConfig.autocomplete === 'on') {
             this.input(ev.target.value)
           } else {
             this.input(this.myValue)
