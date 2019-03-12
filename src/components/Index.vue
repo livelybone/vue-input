@@ -1,28 +1,16 @@
 <template>
-  <textarea v-if="myConfig.inputType==='textarea'"
-            ref="inputEl"
-            :id="id"
-            :type="inputType"
-            :value="value"
-            :placeholder="myConfig.placeholder||myConfig.name"
-            :autocomplete="myConfig.autocomplete"
-            :autofocus="myConfig.autofocus"
-            :readonly="myConfig.readonly"
-            :disabled="myConfig.disabled"
-            :maxlength="myConfig.maxlength"
-            v-on="listeners"></textarea>
-  <input v-else
-         ref="inputEl"
-         :id="id"
-         :type="inputType"
-         :value="value"
-         :placeholder="myConfig.placeholder||myConfig.name"
-         :autocomplete="myConfig.autocomplete"
-         :autofocus="myConfig.autofocus"
-         :readonly="myConfig.readonly"
-         :disabled="myConfig.disabled"
-         :maxlength="myConfig.maxlength"
-         v-on="listeners">
+  <component :is="currComp"
+             ref="inputEl"
+             :id="id"
+             :type="inputType"
+             :value="value"
+             :placeholder="myConfig.placeholder||myConfig.name"
+             :autocomplete="myConfig.autocomplete"
+             :autofocus="myConfig.autofocus"
+             :readonly="myConfig.readonly"
+             :disabled="myConfig.disabled"
+             :maxlength="myConfig.maxlength"
+             v-on="listeners"/>
 </template>
 
 <script>
@@ -82,7 +70,12 @@ export default {
       }
     },
     inputType() {
-      const { myConfig: { inputType: type, autocomplete }, pristine, valid, myValue } = this
+      const {
+        myConfig: { inputType: type, autocomplete },
+        pristine,
+        valid,
+        myValue,
+      } = this
       if (type === 'textarea') {
         return type
       }
@@ -92,6 +85,9 @@ export default {
         return 'password'
       }
       return 'text'
+    },
+    currComp() {
+      return this.inputType === 'textarea' ? 'textarea' : 'input'
     },
     listeners() {
       return {
