@@ -1,6 +1,6 @@
 {
   "name": "@livelybone/vue-input",
-  "version": "3.4.1",
+  "version": "3.4.2",
   "description": "A vue input component, a wrapper of input validator, formatter. textarea available. Fixed bug of chinese input, Fixed bug of auto-fill in chrome and firefox",
   "main": "./lib/umd/index.js",
   "module": "./lib/es/index.js",
