@@ -35,7 +35,7 @@ const defaultConf = {
 
 const fnC = (fn, defaultFn = val => val) => (fn instanceof Function ? fn : defaultFn)
 
-const { InputEvent } = window
+const InputEvent = typeof window !== 'undefined' ? window.InputEvent : Object
 
 export default {
   props: {
