@@ -1,6 +1,6 @@
 <template>
-  <component :is="currComp"
-             ref="inputEl"
+  <component ref="inputEl"
+             :is="currComp"
              :id="id"
              :type="inputType"
              :placeholder="myConfig.placeholder||myConfig.name"
@@ -111,14 +111,15 @@ export default {
     },
   },
   watch: {
-    value(val) {
-      if (val !== this.myValue) {
-        this.myValue = val
-        this.formChange(val)
-      }
-    },
-    myValue(val) {
-      if (this.$refs.inputEl) this.$refs.inputEl.value = val
+    value: {
+      handler(val) {
+        const v = val.toString()
+        if (v !== this.myValue) {
+          this.input(v)
+          this.formChange(v)
+        }
+      },
+      immediate: true,
     },
   },
   methods: {
@@ -152,6 +153,10 @@ export default {
       if (this.myValue !== value) {
         this.myValue = value
       }
+
+      this.$nextTick(() => {
+        if (this.$refs.inputEl) this.$refs.inputEl.value = this.myValue
+      })
 
       this.$emit('input', value)
     },

@@ -14,12 +14,12 @@
 new Vue({
   el: '#module',
   template: '<div>' +
-  '<vue-input v-model="value" :config="config"></vue-input>' +
+  '<vue-input v-model="value" :config="config"/>' +
   '<button @click="value++">add</button>' +
   '</div>',
   data: function () {
     return {
-      value: '',
+      value: '1',
       config: {
         inputType: 'text',
         preFormatter: function (val) {
