@@ -3,7 +3,6 @@
              ref="inputEl"
              :id="id"
              :type="inputType"
-             :value="value"
              :placeholder="myConfig.placeholder||myConfig.name"
              :autocomplete="myConfig.autocomplete"
              :autofocus="myConfig.autofocus"
@@ -118,6 +117,9 @@ export default {
         this.formChange(val)
       }
     },
+    myValue(val) {
+      if (this.$refs.inputEl) this.$refs.inputEl.value = val
+    },
   },
   methods: {
     init(val) {
@@ -150,7 +152,6 @@ export default {
       if (this.myValue !== value) {
         this.myValue = value
       }
-      if (this.$refs.inputEl) this.$refs.inputEl.value = this.myValue
 
       this.$emit('input', value)
     },

@@ -9,22 +9,29 @@
 </head>
 <body>
 <div id="module"></div>
-<input type="email" autocomplete="on">
 
 <script>
 new Vue({
   el: '#module',
-  template: '<vue-input v-model="value" :config="config"></vue-input>',
+  template: '<div>' +
+  '<vue-input v-model="value" :config="config"></vue-input>' +
+  '<button @click="value++">add</button>' +
+  '</div>',
   data: function () {
     return {
       value: '',
       config: {
-        inputType: 'password',
+        inputType: 'text',
         preFormatter: function (val) {
           return val.replace(/\s/g, '')
         },
         autocomplete: 'on'
       },
+    }
+  },
+  watch: {
+    value: function (val) {
+      console.log(val)
     }
   },
   methods: {},
