@@ -1,4 +1,4 @@
-## 3.5.2 (2019-03-27)
+## 3.5.3 (2019-04-09)
 
 
 ### Bug Fixes
@@ -8,6 +8,7 @@
 * **ssr:** Bug: window is not defined when it run in node ([0cba26e](https://github.com/livelybone/vue-input/commit/0cba26e))
 * Bug: Initial value did not display in UI ([c210527](https://github.com/livelybone/vue-input/commit/c210527))
 * Bug: The prop `value` changed, but value in UI did not change ([8c44f20](https://github.com/livelybone/vue-input/commit/8c44f20))
+* Bug: value.toString is not a function when value is undefined ([c872b75](https://github.com/livelybone/vue-input/commit/c872b75))
 
 
 ### Features
