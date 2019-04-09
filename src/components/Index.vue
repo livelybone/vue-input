@@ -113,7 +113,7 @@ export default {
   watch: {
     value: {
       handler(val) {
-        const v = val.toString()
+        const v = val ? val.toString() : ''
         if (v !== this.myValue) {
           this.input(v)
           this.formChange(v)
