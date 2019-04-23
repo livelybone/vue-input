@@ -3,7 +3,7 @@
              :is="currComp"
              :id="id"
              :type="inputType"
-             :placeholder="myConfig.placeholder||myConfig.name"
+             :placeholder="myConfig.placeholder"
              :autocomplete="myConfig.autocomplete"
              :autofocus="myConfig.autofocus"
              :readonly="myConfig.readonly"
