@@ -9,7 +9,7 @@
              :readonly="myConfig.readonly"
              :disabled="myConfig.disabled"
              :maxlength="myConfig.maxlength"
-             v-on="listeners"/>
+             v-on="listeners" />
 </template>
 
 <script>
@@ -115,7 +115,7 @@ export default {
       handler(val) {
         const v = val ? val.toString() : ''
         if (v !== this.myValue) {
-          this.input(v)
+          this.input(v, { isKeyboardInput: false })
           this.formChange(v)
         }
       },
@@ -143,7 +143,7 @@ export default {
         }
       }
     },
-    input(val, { isInit = false, isEnd = false } = {}) {
+    input(val, { isInit = false, isEnd = false, isKeyboardInput = true } = {}) {
       if (this.isCompositionStart) return
       const { sufFormatter, preFormatter } = this.myConfig
       const value = isEnd ? sufFormatter(val) : preFormatter(val)
@@ -159,6 +159,7 @@ export default {
       })
 
       this.$emit('input', value)
+      if (isKeyboardInput) this.$emit('keyboardInput', value)
     },
     blur(val) {
       const value = this.myConfig.sufFormatter(val)
