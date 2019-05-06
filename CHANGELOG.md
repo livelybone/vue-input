@@ -1,4 +1,4 @@
-## 3.5.3 (2019-04-09)
+# 3.6.0 (2019-05-06)
 
 
 ### Bug Fixes
@@ -13,9 +13,11 @@
 
 ### Features
 
+* Delete usage of prop `name` in config ([ddcc52d](https://github.com/livelybone/vue-input/commit/ddcc52d))
 * Fixed unexpected action of auto-fill in chrome and firefox ([cab4374](https://github.com/livelybone/vue-input/commit/cab4374))
 * Simplified code via dynamic component ([420fb71](https://github.com/livelybone/vue-input/commit/420fb71))
 * update ([ceb2e74](https://github.com/livelybone/vue-input/commit/ceb2e74))
+* **Index.vue:** Add the isKeyboardInput field ([8486a5c](https://github.com/livelybone/vue-input/commit/8486a5c))
 
 
 
