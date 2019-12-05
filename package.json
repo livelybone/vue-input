@@ -1,10 +1,11 @@
 {
   "name": "@livelybone/vue-input",
-  "version": "3.6.0",
+  "version": "3.7.0",
   "description": "A vue input component, a wrapper of input validator, formatter. textarea available. Fixed bug of chinese input, Fixed bug of auto-fill in chrome and firefox",
   "main": "./lib/umd/index.js",
   "module": "./lib/es/index.js",
   "unpkg": "./lib/umd/index.js",
+  "type": "./index.d.ts",
   "scripts": {
     "build": "rimraf ./lib && rollup -c",
     "eslint": "eslint ./src/index.vue",

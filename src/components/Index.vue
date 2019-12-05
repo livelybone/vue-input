@@ -4,7 +4,7 @@
              :id="id"
              :type="inputType"
              :placeholder="myConfig.placeholder"
-             :autocomplete="myConfig.autocomplete"
+             :autocomplete="autoComplete"
              :autofocus="myConfig.autofocus"
              :readonly="myConfig.readonly"
              :disabled="myConfig.disabled"
@@ -13,7 +13,7 @@
 </template>
 
 <script>
-const defaultConf = {
+    const defaultConf = {
   inputType: 'text',
   placeholder: '',
   validator: () => true,
@@ -27,6 +27,7 @@ const defaultConf = {
   readonly: false,
   // Fixed unexpected action of auto-fill in chrome and firefox
   // by setting `autocomplete` to 'off' to disabled auto-fill
+  // by setting `autocomplete` to 'new-password' to disabled auto-fill of password input
   autocomplete: 'off',
   autofocus: false,
   disabled: false,
@@ -69,21 +70,13 @@ export default {
       }
     },
     inputType() {
-      const {
-        myConfig: { inputType: type, autocomplete },
-        pristine,
-        valid,
-        myValue,
-      } = this
-      if (type === 'textarea') {
-        return type
-      }
-      if (type === 'password' &&
-        ((autocomplete === 'off' && (!pristine || !valid && myValue)) ||
-          autocomplete === 'on')) {
-        return 'password'
-      }
-      return 'text'
+      const { myConfig: { inputType: type = 'text' } } = this
+      return type
+    },
+    autoComplete() {
+      const { myConfig: { inputType: type, autocomplete } } = this
+        if (type === 'password' && autocomplete === 'off') return 'new-password'
+        return autocomplete
     },
     currComp() {
       return this.inputType === 'textarea' ? 'textarea' : 'input'
